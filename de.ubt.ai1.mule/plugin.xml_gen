@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension point="org.eclipse.emf.ecore.generated_package">
+		<package 
+			uri = "http://www.ubt.de/ai1/mule/MuLE"
+			class = "de.ubt.ai1.mule.muLE.MuLEPackage"
+			genModel = "model/generated/MuLE.genmodel" />
+	</extension>
+</plugin>

@@ -1,0 +1,238 @@
+grammar de.ubt.ai1.mule.MuLE with org.eclipse.xtext.common.Terminals
+
+generate muLE "http://www.ubt.de/ai1/mule/MuLE"
+
+CompilationUnit:	
+	(isProgram?='program' | isLibrary?='library') name=ID 
+	imports += Import*
+	programElements += ProgramElement*
+	main=MainProcedure?;	
+	
+QualifiedName:
+	ID ('.' ID)*
+;
+
+Import:
+	'import' importedNamespace=[CompilationUnit] //('as' name=ID)?
+;
+	
+MainProcedure:
+	{MainProcedure} 'main' block=Block 'endmain';
+	
+ProgramElement:
+	TypeDeclaration | Operation;
+	
+NamedElement:
+	EnumerationValue | TypeDeclaration | Feature | CompilationUnit;
+
+	////// DATA TYPES //////
+DataType:
+	BasicType | DeclaredType | ReferenceType | ListType | OperationType;
+
+DeclaredType:
+	type=[TypeDeclaration|QualifiedName] ('<' typeParams+=DataType (',' typeParams+=DataType)* '>')?;
+
+BasicType:
+	typeName=('integer' | 'rational' | 'string' | 'boolean');
+
+ReferenceType:
+	'reference' '<' type=DataType '>';
+
+ListType:
+	'list' '<' type=DataType '>';
+	
+OperationType:
+	{OperationType} 'operation' '(' (paramTypes+=DataType (',' paramTypes+=DataType)*)? ')' (':' type=DataType)? 
+;
+
+VisibilityModifier:
+	'private' | 'protected'
+;
+
+TypeDeclaration:
+	Composition | Enumeration | TypeParameter;
+
+Enumeration:
+	visibility=VisibilityModifier? 'type' name=ID ':' 'enumeration' values+=EnumerationValue (',' values+=EnumerationValue)* 'endtype';
+
+EnumerationValue:
+	name=ID;
+
+Composition:
+	visibility=VisibilityModifier? abstract?=('abstract')? 'type' name=ID ('<' typeParams+=TypeParameter (',' typeParams+=TypeParameter)* '>')?
+	':' 'composition' ('extends' superType=[Composition|QualifiedName]('<' superTypeParams+=TypeParameter (',' superTypeParams+=TypeParameter)* '>')? )? 
+		typeDeclarations+=TypeDeclaration*
+		attributes+=Attribute* 
+		operations+=Operation*
+	'endtype';
+
+TypeParameter:
+	name=ID ('extends' superType=[Composition|QualifiedName])?;
+
+	////// FEATURES //////	
+
+Feature:
+	Attribute | VariableDeclaration | Parameter | Operation ;
+	
+Attribute:
+	visibility=VisibilityModifier? 'attribute' name=ID ':' type=DataType
+;
+
+Parameter:
+	'parameter' name=ID ':' type=DataType;
+
+Operation:
+	override?=('override')? visibility=VisibilityModifier? abstract?=('abstract')? 'operation' name=ID 
+	//('<' typeParams+=TypeParameter (',' typeParams+=TypeParameter)* '>')? 
+	'(' (params+=Parameter (',' params+=Parameter)*)? ')' 
+	(':' type=DataType)? (block=Block 'endoperation')? 
+;
+
+Block:
+	{Block} statements+=Statement*
+;
+
+	////// STATEMENTS //////
+Statement:
+	VariableDeclaration |
+	AssignmentOrOperationCall  |
+	IfStatement |
+	LoopStatement |
+	LetStatement |
+	ReturnStatement |
+	ExitStatement;
+
+ReturnStatement:
+	{ReturnStatement} 'return' (=> expression=Expression)? 
+;
+	
+ExitStatement:
+	{ExitStatement} 'exit'
+;
+
+VariableDeclaration:
+	'variable' name=ID ':' type=DataType
+;
+
+AssignmentOrOperationCall:
+	(SymbolReference | SuperExpression) ({AssignmentOrOperationCall.left=current} ':=' right=Expression)?;
+	
+LoopStatement:
+	{LoopStatement} 'loop' block=Block 'endloop';
+
+IfStatement:
+	'if' expression=Expression 'then' block=Block
+	elseIfs+=ElseIf*
+	(=> 'else' elseBlock=Block)?
+	'endif'
+;
+
+ElseIf:
+	'elseif' expression=Expression 'then' block=Block
+;
+
+LetStatement:
+	'let' variable=VariableDeclaration 'be' expression=Expression 'do' block=Block 
+	elseLets+=ElseLet*
+	(=> 'else' elseBlock=Block)?
+	'endlet'
+;
+
+ElseLet:
+	'elselet' variable=VariableDeclaration 'be' expression=Expression 'do' block=Block
+;
+
+	////// EXPRESSIONS //////
+Expression:
+	OrExpression;
+
+OrExpression returns Expression:
+	AndExpression ({OrExpression.left=current} op=('or') right=AndExpression)*;
+
+AndExpression returns Expression:
+	EqualityExpression ({AndExpression.left=current} op=('and') right=EqualityExpression)*;
+
+EqualityExpression returns Expression:
+	ComparisonExpression ({EqualityExpression.left=current} op=('=' | '/=') right=ComparisonExpression)*;
+
+ComparisonExpression returns Expression:
+	AdditiveExpression ({ComparisonExpression.left=current} op=('<' | '<=' | '>' | '>=') right=AdditiveExpression)*;
+
+AdditiveExpression returns Expression:
+	MultiplicativeExpression ({AdditiveExpression.left=current} op=('+' | '-' | '&') right=MultiplicativeExpression)*;
+
+MultiplicativeExpression returns Expression:
+	ExponentExpression ({MultiplicativeExpression.left=current} op=('*' | '/' | 'div' | 'mod') right=ExponentExpression)*;
+
+ExponentExpression returns Expression:
+	AtomicExpression ({ExponentExpression.left=current} op=('exp') right=AtomicExpression)*;
+
+AtomicExpression returns Expression:
+	SymbolReference 											|
+	SuperExpression 										|
+	{StringConstant} value=STRING 							|
+	{IntegerConstant} value=INTEGER 						|
+	{RationalConstant} value=RATIONAL				 		|
+	{BooleanConstant} value=('true' | 'false') 				|
+	{Null} 'null' 											|
+	{Unary} op=('+'|'-'|'not') expression=AtomicExpression 	|
+	{Reference} 'reference' expression=AtomicExpression 	|
+	{ParenthesizedExpression} '(' expression=Expression ')' |
+	ListInit 												|	
+	LambdaExpression
+	;
+
+LambdaExpression returns Expression:
+	{LambdaExpression}  'operation' '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' (':' type=DataType)? block=Block 'endoperation'
+;
+
+
+SuperExpression:
+	{SuperExpression} 'super' '.' memberCall=SymbolReference
+;
+
+SymbolReference:	
+	symbol=[NamedElement]
+	//(=>'<' types+=DataType ("," types+=DataType)* '>')?	// leads to issues with comparative operators < and > in expressions
+	(compositionInit=SymbolRefCompositionInit)?
+	accessModifier=SymbolRefAccessModifier?  
+	('.' memberCall=SymbolReference)?
+;
+
+
+
+SymbolRefAccessModifier:
+	{OperationInvocation} '(' (params+=Expression (',' params+=Expression)*)? ')' accessModifier=SymbolRefAccessModifier?		|
+	{ListAccess} '[' index=Expression ']' accessModifier=SymbolRefAccessModifier? 											| 
+	{Dereference} '@' accessModifier=SymbolRefAccessModifier?
+;
+	
+SymbolRefCompositionInit:
+	{SymbolRefCompositionInit} '{' (attributes+=SymbolRefCompositionAttribute (',' attributes+=SymbolRefCompositionAttribute)*)? '}'
+;
+
+SymbolRefCompositionAttribute:
+	attribute=[Attribute] '=' expression=Expression
+;
+
+ListInit:
+	{ListInit} "[" (left=Expression right=(ListInitFunction | ListInitElements))? "]";
+
+ListInitFunction:
+	{ListInitFunction} op=("**" | "..") expression=Expression;
+
+ListInitElements:
+	{ListInitElements} ("," elements+=Expression)*;
+
+
+@Override 
+terminal ID: ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+
+@Override 
+terminal STRING: '"' ( '\\' . | !('\\'|'"') )* '"' ;
+
+terminal INTEGER:
+	INT ;
+
+terminal RATIONAL:
+	INT '.' INT ('E' ('+' | '-')? INT)?;

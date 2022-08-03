@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension
+		point="org.eclipse.ui.editors">
+		<editor
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+			default="true"
+			extensions="mule"
+			id="de.ubt.ai1.mule.MuLE"
+			name="MuLE Editor">
+		</editor>
+	</extension>
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+			commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
+			<activeWhen>
+				<reference
+					definitionId="de.ubt.ai1.mule.MuLE.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+		<handler
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+			commandId="de.ubt.ai1.mule.MuLE.validate">
+		<activeWhen>
+			<reference
+					definitionId="de.ubt.ai1.mule.MuLE.Editor.opened">
+			</reference>
+		</activeWhen>
+		</handler>
+		<!-- copy qualified name -->
+		<handler
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
+			<activeWhen>
+				<reference definitionId="de.ubt.ai1.mule.MuLE.Editor.opened" />
+			</activeWhen>
+		</handler>
+		<handler
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
+			<activeWhen>
+				<and>
+					<reference definitionId="de.ubt.ai1.mule.MuLE.XtextEditor.opened" />
+					<iterate>
+						<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
+					</iterate>
+				</and>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="de.ubt.ai1.mule.MuLE.Editor.opened">
+			<and>
+				<reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
+				<with variable="activeEditor">
+					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+						value="de.ubt.ai1.mule.MuLE"
+						forcePluginActivation="true"/>
+				</with>
+			</and>
+		</definition>
+		<definition id="de.ubt.ai1.mule.MuLE.XtextEditor.opened">
+			<and>
+				<reference definitionId="isXtextEditorActive"/>
+				<with variable="activeEditor">
+					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+						value="de.ubt.ai1.mule.MuLE"
+						forcePluginActivation="true"/>
+				</with>
+			</and>
+		</definition>
+	</extension>
+	<extension
+			point="org.eclipse.ui.preferencePages">
+		<page
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="de.ubt.ai1.mule.MuLE"
+			name="MuLE">
+			<keywordReference id="de.ubt.ai1.mule.ui.keyword_MuLE"/>
+		</page>
+		<page
+			category="de.ubt.ai1.mule.MuLE"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+			id="de.ubt.ai1.mule.MuLE.coloring"
+			name="Syntax Coloring">
+			<keywordReference id="de.ubt.ai1.mule.ui.keyword_MuLE"/>
+		</page>
+		<page
+			category="de.ubt.ai1.mule.MuLE"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+			id="de.ubt.ai1.mule.MuLE.templates"
+			name="Templates">
+			<keywordReference id="de.ubt.ai1.mule.ui.keyword_MuLE"/>
+		</page>
+	</extension>
+	<extension
+			point="org.eclipse.ui.propertyPages">
+		<page
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="de.ubt.ai1.mule.MuLE"
+			name="MuLE">
+			<keywordReference id="de.ubt.ai1.mule.ui.keyword_MuLE"/>
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+			<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+		</page>
+	</extension>
+	<extension
+		point="org.eclipse.ui.keywords">
+		<keyword
+			id="de.ubt.ai1.mule.ui.keyword_MuLE"
+			label="MuLE"/>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+	<command
+			description="Trigger expensive validation"
+			id="de.ubt.ai1.mule.MuLE.validate"
+			name="Validate">
+	</command>
+	<!-- copy qualified name -->
+	<command
+			id="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+			categoryId="org.eclipse.ui.category.edit"
+			description="Copy the qualified name for the selected element"
+			name="Copy Qualified Name">
+	</command>
+	<command
+			id="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+			categoryId="org.eclipse.ui.category.edit"
+			description="Copy the qualified name for the selected element"
+			name="Copy Qualified Name">
+	</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.edit">
+			 <command
+				 commandId="de.ubt.ai1.mule.MuLE.validate"
+				 style="push"
+				 tooltip="Trigger expensive validation">
+			<visibleWhen checkEnabled="false">
+				<reference
+					definitionId="de.ubt.ai1.mule.MuLE.Editor.opened">
+				</reference>
+			</visibleWhen>
+		</command>
+		</menuContribution>
+		<!-- copy qualified name -->
+		<menuContribution locationURI="popup:#TextEditorContext?after=copy">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="de.ubt.ai1.mule.MuLE.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?after=copy">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="de.ubt.ai1.mule.MuLE.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="popup:org.eclipse.xtext.ui.outline?after=additions">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<and>
+						<reference definitionId="de.ubt.ai1.mule.MuLE.XtextEditor.opened" />
+						<iterate>
+							<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
+						</iterate>
+					</and>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
+			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="de.ubt.ai1.mule.MuLE.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+			commandId="org.eclipse.xtext.ui.editor.FindReferences">
+			<activeWhen>
+				<reference
+					definitionId="de.ubt.ai1.mule.MuLE.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+		<content-type
+			base-type="org.eclipse.core.runtime.text"
+			file-extensions="mule"
+			id="de.ubt.ai1.mule.MuLE.contenttype"
+			name="MuLE File"
+			priority="normal">
+		</content-type>
+	</extension>
+	<!-- adding resource factories -->
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="mule">
+		</parser>
+	</extension>
+	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+		<resourceServiceProvider
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+			uriExtension="mule">
+		</resourceServiceProvider>
+	</extension>
+	<!-- marker definitions for de.ubt.ai1.mule.MuLE -->
+	<extension
+			id="mule.check.fast"
+			name="MuLE Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.fast"/>
+		<persistent value="true"/>
+	</extension>
+	<extension
+			id="mule.check.normal"
+			name="MuLE Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.normal"/>
+		<persistent value="true"/>
+	</extension>
+	<extension
+			id="mule.check.expensive"
+			name="MuLE Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.expensive"/>
+		<persistent value="true"/>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="de.ubt.ai1.mule.MuLE"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
+			id="de.ubt.ai1.mule.MuLE.validator.preferencePage"
+			name="Errors/Warnings">
+			<keywordReference id="de.ubt.ai1.mule.ui.keyword_MuLE"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.xtext.builder.participant">
+		<participant
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+			fileExtensions="mule"/>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="de.ubt.ai1.mule.MuLE"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="de.ubt.ai1.mule.MuLE.compiler.preferencePage"
+			name="Compiler">
+			<keywordReference id="de.ubt.ai1.mule.ui.keyword_MuLE"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			category="de.ubt.ai1.mule.MuLE"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="de.ubt.ai1.mule.MuLE.compiler.propertyPage"
+			name="Compiler">
+			<keywordReference id="de.ubt.ai1.mule.ui.keyword_MuLE"/>
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+			<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?after=xtext.ui.openDeclaration">
+			<command
+				commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand"
+				id="de.ubt.ai1.mule.MuLE.OpenGeneratedCode"
+				style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="de.ubt.ai1.mule.MuLE.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
+			commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand">
+			<activeWhen>
+				<reference definitionId="de.ubt.ai1.mule.MuLE.Editor.opened" />
+			</activeWhen>
+		</handler>
+	</extension>
+	<!-- Quick Outline -->
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler 
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
+			<activeWhen>
+				<reference
+					definitionId="de.ubt.ai1.mule.MuLE.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			description="Open the quick outline."
+			id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+			name="Quick Outline">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+				style="push"
+				tooltip="Open Quick Outline">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="de.ubt.ai1.mule.MuLE.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<!-- quickfix marker resolution generator for de.ubt.ai1.mule.MuLE -->
+	<extension
+			point="org.eclipse.ui.ide.markerResolution">
+		<markerResolutionGenerator
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="de.ubt.ai1.mule.ui.mule.check.fast">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+		<markerResolutionGenerator
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="de.ubt.ai1.mule.ui.mule.check.normal">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+		<markerResolutionGenerator
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="de.ubt.ai1.mule.ui.mule.check.expensive">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+	</extension>
+	<!-- Rename Refactoring -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler 
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
+			<activeWhen>
+				<reference
+					definitionId="de.ubt.ai1.mule.MuLE.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.edit">
+			<command commandId="org.eclipse.xtext.ui.refactoring.RenameElement"
+				style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="de.ubt.ai1.mule.MuLE.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="de.ubt.ai1.mule.MuLE"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+			id="de.ubt.ai1.mule.MuLE.refactoring"
+			name="Refactoring">
+			<keywordReference id="de.ubt.ai1.mule.ui.keyword_MuLE"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.compare.contentViewers">
+		<viewer id="de.ubt.ai1.mule.MuLE.compare.contentViewers"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="mule">
+		</viewer>
+		<contentTypeBinding
+			contentTypeId="de.ubt.ai1.mule.MuLE.contenttype"
+			contentViewerId="de.ubt.ai1.mule.MuLE.compare.contentViewers" />
+	</extension>
+	<extension point="org.eclipse.compare.contentMergeViewers">
+		<viewer id="de.ubt.ai1.mule.MuLE.compare.contentMergeViewers"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="mule" label="MuLE Compare">
+		</viewer>
+		<contentTypeBinding
+			contentTypeId="de.ubt.ai1.mule.MuLE.contenttype"
+			contentMergeViewerId="de.ubt.ai1.mule.MuLE.compare.contentMergeViewers" />
+	</extension>
+	<extension point="org.eclipse.ui.editors.documentProviders">
+		<provider id="de.ubt.ai1.mule.MuLE.editors.documentProviders"
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+			extensions="mule">
+		</provider>
+	</extension>
+	<extension point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+			extension="mule"
+			type="text">
+		</fileTypes>
+	</extension>
+	<extension
+		point="org.eclipse.ui.newWizards">
+		<category id="de.ubt.ai1.mule.ui.category" name="MuLE">
+		</category>
+		<wizard
+        category="de.ubt.ai1.mule.ui.category"
+        class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:de.ubt.ai1.mule.ui.wizard.MuLETemplateNewProjectWizard"
+        finalPerspective="de.ubt.ai1.mule.ui.perspectives.MuLEPerspective"
+        icon="icons/new_MuLE_proj.gif"
+        id="de.ubt.ai1.mule.ui.wizard.MuLENewProjectWizard"
+        name="MuLE Project"
+        project="true">
+		</wizard>
+		<wizard
+        category="de.ubt.ai1.mule.ui.category"
+        class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:de.ubt.ai1.mule.ui.wizard.MuLETemplateNewFileWizard"
+        finalPerspective="de.ubt.ai1.mule.ui.perspectives.MuLEPerspective"
+        icon="icons/new_MuLE_file.png"
+        id="de.ubt.ai1.mule.ui.wizard.MuLENewFileWizard"
+        name="MuLE File">
+		</wizard>
+	</extension>
+	<extension
+		point="org.eclipse.xtext.ui.projectTemplate">
+		<projectTemplateProvider
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:de.ubt.ai1.mule.ui.wizard.MuLEProjectTemplateProvider"
+			grammarName="de.ubt.ai1.mule.MuLE">
+		</projectTemplateProvider>
+	</extension>
+	<extension
+		point="org.eclipse.xtext.ui.fileTemplate">
+		<fileTemplateProvider
+			class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:de.ubt.ai1.mule.ui.wizard.MuLEFileTemplateProvider"
+			grammarName="de.ubt.ai1.mule.MuLE">
+		</fileTemplateProvider>
+	</extension>
+	<extension point="org.eclipse.core.runtime.adapters">
+        <factory class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:de.ubt.ai1.mule.ui.debugsupport.MuLEStratumBreakpointAdapterFactory"
+            adaptableType="org.eclipse.xtext.ui.editor.XtextEditor">
+            <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
+        </factory> 
+    </extension>
+    <extension point="org.eclipse.ui.editorActions">
+        <editorContribution targetID="de.ubt.ai1.mule.MuLE" 
+            id="de.ubt.ai1.mule.MuLE.rulerActions">
+            <action
+                label="Not Used"
+                class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+                style="push"
+                actionID="RulerDoubleClick"
+                id="de.ubt.ai1.mule.MuLE.doubleClickBreakpointAction"/>
+        </editorContribution>
+    </extension>
+    <extension point="org.eclipse.ui.popupMenus">
+        <viewerContribution
+            targetID="de.ubt.ai1.mule.MuLE.RulerContext"
+            id="de.ubt.ai1.mule.MuLE.RulerPopupActions">
+            <action
+                label="Toggle Breakpoint"
+                class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+                menubarPath="debug"
+                id="de.ubt.ai1.mule.MuLE.rulerContextMenu.toggleBreakpointAction">
+            </action>
+            <action
+                label="Not used"
+                class="de.ubt.ai1.mule.ui.MuLEExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerEnableDisableBreakpointActionDelegate"
+                menubarPath="debug"
+                id="de.ubt.ai1.mule.MuLE.rulerContextMenu.enableDisableBreakpointAction">
+            </action>
+        </viewerContribution>
+    </extension>
+	<extension
+	       point="org.eclipse.debug.core.launchConfigurationTypes">
+	    <launchConfigurationType
+	          delegate="de.ubt.ai1.mule.ui.launch.MuLELaunchDelegate"
+	          id="de.ubt.ai1.mule.ui.MuLELaunchConfigurationType"
+	          modes="run, debug"
+	          name="MuLE Launch"
+	          sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+	          sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+	    </launchConfigurationType>
+	</extension>
+	<extension
+	       point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+	    <launchConfigurationTabGroup
+	          class="de.ubt.ai1.mule.ui.launch.MuLELaunchTabGroup"
+	          id="de.ubt.ai1.mule.ui.MuLELaunchConfigurationTabGroup"
+	          type="de.ubt.ai1.mule.ui.MuLELaunchConfigurationType">
+	       <launchMode
+	             description="Debug MuLE application"
+	             mode="debug"
+	             perspective="org.eclipse.debug.ui.DebugPerspective">
+	       </launchMode>
+	       <launchMode
+	             description="Run MuLE application"
+	             mode="run">
+	       </launchMode>
+	    </launchConfigurationTabGroup>
+	</extension>
+	<extension
+	       point="org.eclipse.debug.ui.launchShortcuts">
+	    <shortcut
+	          class="de.ubt.ai1.mule.ui.launch.MuLELaunchShortcut"
+	          description="Launches MuLE application"
+	          id="de.ubt.ai1.mule.ui.shortcut1"
+	          label="MuLE"
+	          modes="run, debug">
+	       <contextualLaunch>
+	          <contextLabel
+	                label="MuLE Application"
+	                mode="debug">
+	          </contextLabel>
+	          <contextLabel
+	                label="MuLE Application"
+	                mode="run">
+	          </contextLabel>
+	          <enablement>
+	             <with
+	                   variable="selection">
+	                <count
+	                      value="1">
+	                </count>
+	                <iterate
+	                      ifEmpty="false"
+	                      operator="and">
+	                   <adapt
+	                         type="org.eclipse.core.resources.IFile">
+	                   </adapt>
+	                   <test
+	                         property="org.eclipse.debug.ui.matchesPattern"
+	                         value="*.mule">
+	                   </test>
+	                </iterate>
+	             </with>
+	          </enablement></contextualLaunch>
+	    </shortcut>
+	</extension>
+ <extension
+       point="org.eclipse.ui.perspectives">
+    <perspective
+          class="de.ubt.ai1.mule.ui.perspective.MuLEPerspective"
+          fixed="true"
+          icon="icons/new_MuLE_proj.gif"
+          id="de.ubt.ai1.mule.ui.perspectives.MuLEPerspective"
+          name="MuLE">
+    </perspective>
+ </extension>
+ <extension
+       point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension          targetID="de.ubt.ai1.mule.ui.perspectives.MuLEPerspective">
+       <newWizardShortcut
+             id="de.ubt.ai1.mule.ui.wizard.MuLENewProjectWizard">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="de.ubt.ai1.mule.ui.wizard.MuLENewFileWizard">
+       </newWizardShortcut>
+       <hiddenToolBarItem
+             id="org.eclipse.ui.externaltools.ExternalToolMenuDelegateToolbar">
+       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.mylyn.tasks.ui.command.openTask">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.ui.navigate.next">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.ui.navigate.previous">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.ui.edit.text.gotoLastEditPosition">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.ui.edit.text.gotoNextEditPosition">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.ui.navigate.backwardHistory">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.ui.navigate.forwardHistory">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.ui.window.pinEditor">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.search.OpenSearchDialogPage">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.debug.ui.commands.ToggleStepFilters">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.debug.ui.commands.StepInto">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.debug.ui.commands.StepReturn">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.debug.ui.commands.Suspend">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.debug.ui.commands.DropToFrame">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="org.eclipse.debug.ui.commands.Disconnect">       </hiddenToolBarItem>
+       <hiddenToolBarItem             id="ui.editor.markOccurrences">       </hiddenToolBarItem>
+    </perspectiveExtension>
+    <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
+       <newWizardShortcut id="de.ubt.ai1.mule.ui.wizard.MuLENewProjectWizard"></newWizardShortcut>
+       <newWizardShortcut id="de.ubt.ai1.mule.ui.wizard.MuLENewFileWizard"></newWizardShortcut>
+    </perspectiveExtension>
+    <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+       <newWizardShortcut id="de.ubt.ai1.mule.ui.wizard.MuLENewProjectWizard"></newWizardShortcut>
+       <newWizardShortcut id="de.ubt.ai1.mule.ui.wizard.MuLENewFileWizard"></newWizardShortcut>
+    </perspectiveExtension>
+    <perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
+       <newWizardShortcut id="de.ubt.ai1.mule.ui.wizard.MuLENewProjectWizard"></newWizardShortcut>
+       <newWizardShortcut id="de.ubt.ai1.mule.ui.wizard.MuLENewFileWizard"></newWizardShortcut>
+    </perspectiveExtension>
+    <perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
+       <newWizardShortcut id="de.ubt.ai1.mule.ui.wizard.MuLENewProjectWizard"></newWizardShortcut>
+       <newWizardShortcut id="de.ubt.ai1.mule.ui.wizard.MuLENewFileWizard"></newWizardShortcut>
+    </perspectiveExtension>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="menu:help?before=org.eclipse.equinox.p2.ui.sdk.update">
+       <command
+             commandId="de.ubt.ai1.mule.ui.commands.OpenHelpSite"
+             id="muleHelp"
+             label="Open MuLE Homepage"
+             style="push"
+             tooltip="Opens the MuLE website in the default browser.">
+       </command>
+    </menuContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <command
+          defaultHandler="de.ubt.ai1.mule.ui.perspective.HelpSite"
+          id="de.ubt.ai1.mule.ui.commands.OpenHelpSite"
+          name="Open MuLE Homepage">
+    </command>
+ </extension>
+</plugin>

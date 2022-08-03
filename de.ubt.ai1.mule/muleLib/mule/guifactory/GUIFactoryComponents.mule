@@ -1,0 +1,142 @@
+library GUIFactoryComponents
+import GUIFactoryTasks
+import GUIFactory
+
+//------------------------------------------------------
+// abstract Component type
+//------------------------------------------------------
+
+abstract type Component : composition
+	operation setVisible(parameter visible : boolean) 
+	operation getParent() : reference<Component> 
+	//operation setParent(parameter parent : reference<Component>) 
+endtype
+
+//------------------------------------------------------
+// Image
+//------------------------------------------------------
+abstract type Image : composition extends Component
+	//operation setImage(parameter image : Image)
+	operation setScale(parameter scale : rational)
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation getWidth() : integer
+	operation getHeight() : integer
+	operation setTransparency(parameter alpha : rational)
+	operation getTransparency() : rational
+endtype
+
+operation createImage(parameter path : string) : reference<Image>
+
+//------------------------------------------------------
+// Text
+//------------------------------------------------------
+abstract type Label : composition extends Component
+	operation setText(parameter text : string)
+	operation getText() : string
+	operation setTextAlignment(parameter alignment : GUIFactory.Alignment)
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation setFont(parameter fontName : string, parameter fontType : FontType, parameter fontSize : integer, parameter colour : Colour)
+	operation getWidth() : integer
+	operation getHeight() : integer
+endtype
+
+abstract type TextField : composition extends Component
+	operation setText(parameter text : string)
+	operation getText() : string
+	operation setEditable(parameter editable : boolean)
+	operation isEditable() : boolean
+	operation setBackground(parameter colour : GUIFactory.Colour)
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation setFont(parameter fontName : string, parameter fontType : FontType, parameter fontSize : integer, parameter colour : Colour)
+	operation getWidth() : integer
+	operation getHeight() : integer
+endtype
+
+abstract type TextArea : composition extends Component
+	operation setText(parameter text : string)
+	operation getText() : string
+	operation setEditable(parameter editable : boolean)
+	operation isEditable() : boolean
+	operation setBackground(parameter colour : GUIFactory.Colour)
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation setFont(parameter fontName : string, parameter fontType : FontType, parameter fontSize : integer, parameter colour : Colour)
+	operation getWidth() : integer
+	operation getHeight() : integer
+endtype
+
+operation createLabel(parameter text : string) : reference<Label>
+operation createTextField(parameter alignment : GUIFactory.HorizontalAlignment, parameter text : string) : reference<TextField>
+operation createTextArea(parameter text : string) : reference<TextArea>
+
+//------------------------------------------------------
+// Control elements
+//------------------------------------------------------
+abstract type Button : composition extends Component
+	operation handleActionTask(parameter actionTask : reference<GUIFactoryTasks.ActionTask>)
+	operation setText(parameter text : string)
+	operation setActive(parameter active : boolean)
+	operation isActive()
+	operation getText() : string
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation setFont(parameter fontName : string, parameter fontType : FontType, parameter fontSize : integer, parameter colour : Colour)
+	operation getWidth() : integer
+	operation getHeight() : integer
+endtype
+
+abstract type CheckBox : composition extends Component
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation isSelected() : boolean
+	operation getWidth() : integer
+	operation getHeight() : integer
+abstract endtype
+
+abstract type DropDownMenu : composition extends Component
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation getSelectedItem() : string
+	operation getWidth() : integer
+	operation getHeight() : integer
+endtype
+
+abstract type Slider : composition extends Component
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation getValue() : integer
+	operation getWidth() : integer
+	operation getHeight() : integer
+endtype
+
+operation createButton(parameter text : string) : reference<Button>
+operation createCheckBox(parameter alignment : GUIFactory.CheckBoxAlignment, parameter text : string, parameter selected : boolean) : reference<CheckBox>
+operation createDropDownMenu(parameter itemNames : list<string>) : reference<DropDownMenu>
+operation createSlider(parameter minimum : integer, parameter maximum : integer, parameter value : integer) : reference<Slider>
+
+//------------------------------------------------------
+// Shapes
+//------------------------------------------------------
+abstract type Shape : composition extends Component
+//	operation handleMouseTask(parameter mouseTask : reference<GUIFactoryTasks.MouseTask>)
+	operation setSize(parameter width : integer, parameter height : integer)
+	operation getWidth() : integer
+	operation getHeight() : integer
+	operation setImage(parameter image : reference<Image>)
+	operation getImage() : reference<Image>
+	operation setColour(parameter colour : GUIFactory.Colour)
+	operation getColour() : GUIFactory.Colour	
+endtype
+
+abstract type Polygon : composition extends Shape
+	//operation setScale(parameter scalingFactorX : rational, parameter scalingFactorY : rational)
+	operation addPoint(parameter x : integer, parameter y : integer)
+endtype
+
+abstract type Ellipse : composition extends Shape
+endtype
+
+abstract type Rectangle : composition extends Shape
+endtype
+
+operation createRectangle(parameter width : integer, parameter height : integer) : reference<Rectangle>
+operation createEllipse(parameter width : integer, parameter height : integer) : reference<Ellipse>
+operation createPolygon(parameter xPoint : list<integer>, parameter yPoints : list<integer>, parameter points : integer) : reference<Polygon>
+
+
+

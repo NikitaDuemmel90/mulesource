@@ -1,0 +1,85 @@
+library UBTMicroworld
+
+abstract type Agent : composition
+	operation getXPosition() : integer
+	operation getYPosition() : integer
+	operation getXstartPosition() : integer	
+	operation getYstartPosition() : integer
+	operation moveForward()
+	operation moveBackward()
+	operation rotateRight()
+	operation rotateLeft()
+	operation doNothing()
+	operation isTileInFrontOfWalkable() : boolean
+	operation isTileBehindWalkable() : boolean
+	operation getID() : integer	
+	operation getStepsMade() : integer
+	operation getNumberInputs() : integer	
+	operation getNumberInvalidInputs() : integer
+	operation getLastMoveDirection() : MoveDirection
+	operation getMoveDirectionList() : list<MoveDirection>
+	operation getLineOfSight() : LineOfSight	
+	operation getNumberOfCollectedObjects() : integer
+endtype
+
+type DefaultLevelType : enumeration	
+	DEFAULT_LEVEL_0, DEFAULT_LEVEL_1, DEFAULT_LEVEL_2, DEFAULT_LEVEL_3, DEFAULT_LEVEL_4, DEFAULT_LEVEL_5, DEFAULT_LEVEL_6, DEFAULT_LEVEL_7, DEFAULT_LEVEL_8, 
+	DEFAULT_LEVEL_9, DEFAULT_LEVEL_10, DEFAULT_LEVEL_11, DEFAULT_LEVEL_12, DEFAULT_LEVEL_13, DEFAULT_LEVEL_14, DEFAULT_LEVEL_15, DEFAULT_LEVEL_16
+endtype
+	
+type DelayTime : enumeration
+	NO_DELAY, SHORT_DELAY, MEDIUM_DELAY, LONG_DELAY
+endtype
+
+type LineOfSight : enumeration
+	NORTH, EAST, SOUTH, WEST
+endtype
+	
+type MoveDirection : enumeration
+	FORWARD, BACK, RIGHT, LEFT, NONE, INVALID, FORWARD_INVALID, BACK_INVALID
+endtype
+	
+type ObjectType : enumeration		
+	NO_OBJECT, KEY		
+endtype
+
+type TerrainType : enumeration	
+	GRASS, SAND, PATH, SNOW, STONE, WATER, TARGET, START
+endtype
+	
+type WinValidatorType : enumeration		
+	VALIDATOR_1, VALIDATOR_2, VALIDATOR_3, CUSTOM		
+endtype
+
+
+operation initCustomGame1(parameter terrain : list<list<TerrainType>>, parameter validator : WinValidatorType) endoperation
+
+operation initCustomGame2(parameter terrain : list<list<TerrainType>>, parameter objects : list<list<ObjectType>>, parameter validator : WinValidatorType) endoperation
+
+operation initCustomGame3(parameter terrainMapPath : string, parameter validator : WinValidatorType) endoperation
+
+operation initCustomGame4(parameter terrainMapPath : string, parameter objectsMapPath : string, parameter validator : WinValidatorType) endoperation
+
+operation initDefaultGame(parameter value : DefaultLevelType) endoperation
+
+operation getAgentList() : list<reference<Agent>> endoperation
+
+operation getNavMap() : list<list<String>> endoperation
+
+operation getTerrainType(parameter x : integer, parameter y : integer) : TerrainType endoperation
+
+operation isGameRunning() : boolean enoperation
+
+operation setDelayTime(parameter delayTime : DelayTime) endoperation
+
+operation setGameFinished() endoperation
+
+operation setGameOver() endoperation
+
+operation registerAgentForKeyListener(parameter agent : reference<Agent>) endoperation
+
+
+
+
+
+

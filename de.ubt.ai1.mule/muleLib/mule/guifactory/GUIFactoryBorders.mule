@@ -1,0 +1,31 @@
+library GUIFactoryBorders
+import GUIFactory
+
+type BorderType : enumeration
+	RAISED, LOWERED
+endtype
+
+
+abstract type Border : composition
+endtype
+
+//------------------------------------------------------
+// TitleBorder
+//------------------------------------------------------
+abstract type TitledBorder : composition extends Border
+endtype
+operation createTitledBorder(parameter colour : GUIFactory.Colour, parameter thickness : integer, parameter title : string) : reference<TitleBorder>
+
+//------------------------------------------------------
+// LineBorder
+//------------------------------------------------------
+abstract type LineBorder : composition extends Border
+endtype
+operation createLineBorder(parameter colour : GUIFactory.Colour, parameter thickness : integer, parameter rounded : boolean) : reference<LineBorder>
+
+//------------------------------------------------------
+// BevelBorder
+//------------------------------------------------------
+abstract type BevelBorder : composition extends Border
+endtype
+operation createBevelBorder(parameter borderType : BorderType, parameter highlight : GUIFactory.Colour, parameter shadow : GUIFactory.Colour) : reference<BevelBorder>

@@ -1,0 +1,67 @@
+library Mathematics
+
+operation randomInteger(parameter min : integer, parameter max : integer) : integer
+endoperation
+
+operation randomRational() : rational
+endoperation
+
+operation pi() : rational
+endoperation
+
+operation e() : rational
+endoperation
+
+operation sin(parameter a : rational) : rational
+endoperation
+
+operation cos(parameter a : rational) : rational
+endoperation
+
+operation tan(parameter a : rational) : rational
+endoperation
+
+operation asin(parameter a : rational) : rational
+endoperation
+
+operation acos(parameter a : rational) : rational
+endoperation
+
+operation atan(parameter a : rational) : rational
+endoperation
+
+operation log(parameter a : rational) : rational
+endoperation
+
+operation log10(parameter a : rational) : rational
+endoperation
+
+operation round(parameter a : rational) : integer
+endoperation
+
+operation floor(parameter a : rational) : integer
+endoperation
+
+operation absoluteInteger(parameter a : integer) : integer
+endoperation
+
+operation absoluteRational(parameter a : rational) : rational
+endoperation
+
+operation toDegrees(parameter a : rational) : rational
+endoperation
+
+operation toRadians(parameter a : rational) : rational
+endoperation
+
+operation getMaxIntegerValue() : integer
+endoperation
+
+operation getMinIntegerValue() : integer
+endoperation
+
+operation getMaxRationalValue() : rational
+endoperation
+
+operation getMinRationalValue() : rational
+endoperation

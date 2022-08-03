@@ -1,0 +1,69 @@
+library GUIFactory
+import GUIFactoryPanes
+
+//------------------------------------------------------
+// Enumerations
+//------------------------------------------------------
+
+type Palette : enumeration
+		LIGHT_RED, RED, DARK_RED, CYAN,
+		LIGHT_BLUE, BLUE, DARK_BLUE,
+		LIGHT_YELLOW, YELLOW, DARK_YELLOW,
+		LIGHT_GREEN, GREEN, DARK_GREEN, ORANGE,
+		GOLD, LIGHT_GREY, GREY, DARK_GREY,
+		LIGHT_BROWN, BROWN, DARK_BROWN, PURPLE,
+		BLACK, WHITE, TRANSPARENT
+endtype
+
+type HorizontalAlignment : enumeration
+	LEFT, CENTER, RIGHT
+endtype
+
+type FontType : enumeration
+	PLAIN, ITALIC, BOLD, ITALIC_BOLD
+endtype
+
+type CheckBoxAlignment : enumeration
+	NONE, ICON_LEFT_TEXT_RIGHT, ICON_RIGHT_TEXT_LEFT, ICON_TEXT_LEFT, ICON_TEXT_RIGHT
+endtype
+
+type Alignment : enumeration
+	TOP_LEFT, TOP_CENTER, TOP_RIGHT, CENTER_LEFT, CENTER, CENTER_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT, NONE
+endtype
+
+//------------------------------------------------------
+// Window
+//------------------------------------------------------
+
+abstract type Window : composition
+	operation showWindow() 
+	operation setPane(parameter pane : reference<GUIFactoryPanes.Pane>) 
+	operation getPane() : reference<GUIFactoryPanes.Pane> 
+	operation setSize(parameter width : integer, parameter height : integer) 
+	operation setResizable(parameter resizable : boolean) 
+	operation setTitle(parameter title : string) 
+endtype
+
+operation createWindow(parameter title : string, parameter width : integer, parameter height : integer) : reference<Window> 
+
+//------------------------------------------------------
+// Colour
+//------------------------------------------------------
+
+abstract type Colour : composition
+endtype
+
+operation createColour(parameter r : integer, parameter g : integer, parameter b : integer, parameter a : integer) : Colour
+operation createColourFromPalette(parameter palette : Palette) : Colour
+
+
+
+
+
+
+
+
+
+
+
+

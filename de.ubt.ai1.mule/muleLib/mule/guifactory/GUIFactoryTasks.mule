@@ -1,0 +1,8 @@
+library GUIFactoryTasks
+
+//abstract type Task : composition
+//endtype
+
+abstract type ActionTask : composition //extends Task
+	abstract operation actionPerformed()
+endtype

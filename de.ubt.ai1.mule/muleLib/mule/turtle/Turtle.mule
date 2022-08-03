@@ -1,0 +1,103 @@
+library Turtle
+
+type Speed : enumeration
+	SLOW, MEDIUM, FAST, INSTANT
+endtype
+
+type Colors : enumeration 
+	WHITE, BLACK, RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN, PINK, ORANGE, LIGHT_GRAY, DARK_GRAY
+endtype
+
+type Orientation : enumeration
+	NORTH, SOUTH, EAST, WEST
+endtype
+
+operation forward(parameter length : rational)
+endoperation
+
+operation backward(parameter length : rational)
+endoperation
+
+operation right(parameter degree : rational)
+endoperation
+
+operation left(parameter degree : rational)
+endoperation
+
+operation penUp()
+endoperation
+
+operation penDown()
+endoperation
+
+operation setColor(parameter color : Colors)
+endoperation
+
+operation setColorRGB(parameter r : integer, parameter g : integer, parameter b : integer)
+endoperation
+
+operation setThickness(parameter thickness : integer)
+endoperation
+
+operation moveTo(parameter x : integer, parameter y : integer)
+endoperation
+
+operation setPosition(parameter x : integer, parameter y : integer)
+endoperation
+
+operation setDirection(parameter arc : rational)
+endoperation
+
+operation setOrientation(parameter o : Orientation)
+endoperation
+
+operation setFrameSize(parameter x : integer, parameter y : integer)
+endoperation
+
+operation getX() : integer
+endoperation
+
+operation getY() : integer
+endoperation
+
+operation getArc() : rational
+endoperation
+
+operation startFilledPolygon(parameter color : Colors)
+endoperation
+
+operation startFilledPolygonRGB(parameter r : integer, parameter g : integer, parameter b : integer)
+endoperation
+
+operation endFilledPolygon()
+endoperation
+
+operation circle(parameter radius : integer)
+endoperation
+
+operation filledCircle(parameter radius : integer, parameter color : Colors)
+endoperation
+
+operation filledCircleRGB(parameter radius : integer, parameter r : integer, parameter g : integer, parameter b : integer)
+endoperation
+
+operation setAnimationSpeed(parameter speed : Speed)
+endoperation
+
+operation showCoordinateSystem(parameter bool : boolean)
+endoperation
+
+operation scaleCoordinateSystem(parameter x : integer, parameter y : integer)
+endoperation
+
+operation activateKeyboardMode(parameter speed : Speed)
+endoperation
+
+operation showCursor(parameter bool : boolean)
+endoperation
+
+operation setBackgroundColor(parameter color : Colors)
+endoperation
+
+operation setBackgroundColorRGB(parameter r : integer, parameter g : integer, parameter b : integer)
+endoperation

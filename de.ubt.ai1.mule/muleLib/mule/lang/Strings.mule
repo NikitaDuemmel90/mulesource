@@ -1,0 +1,37 @@
+library Strings
+	
+operation subString(parameter str : string, parameter startPos : integer, parameter endPos : integer) : string
+endoperation
+	
+operation lengthOf(parameter str : string) : integer
+endoperation
+	
+operation indexOfSubString(parameter str : string, parameter subStr : string) : integer
+endoperation
+
+operation replaceAll(parameter str : string, parameter regex : string, parameter replacement : string) : string
+endoperation
+
+operation replaceFirst(parameter str : string, parameter regex : string, parameter replacement : string) : string
+endoperation
+
+operation split(parameter str : string, parameter regex : string) : list<string>
+endoperation
+
+operation toLowerCase(parameter str : string) : string
+endoperation
+
+operation toUpperCase(parameter str : string) : string
+endoperation
+
+operation integerToString(parameter num : integer) : string
+endoperation
+
+operation rationalToString(parameter num : rational) : string
+endoperation
+
+operation booleanToString(parameter num : boolean) : string
+endoperation
+
+operation genericToString(parameter object : T) : string
+endoperation

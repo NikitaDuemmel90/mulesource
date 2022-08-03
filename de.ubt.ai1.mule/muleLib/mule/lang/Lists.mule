@@ -1,0 +1,31 @@
+library Lists
+	
+operation isEmpty(parameter _list : list<T>) : boolean
+	
+operation lengthOf(parameter _list : list<T>) : integer
+	
+operation indexOf(parameter _list : list<T>, parameter elem : T) : integer
+	
+operation append(parameter _list : list<T>, parameter elem : T) : list<T>
+	
+operation prepend(parameter _list : list<T>, parameter elem : T) : list<T>
+
+operation contains(parameter _list : list<T>, parameter elem : T) : boolean
+	
+operation head(parameter _list : list<T>) : T
+	
+operation tail(parameter _list : list<T>) : list<T>
+	
+operation last(parameter _list : list<T>) : T
+    
+operation subList(parameter _list : list<T>, parameter min : integer, parameter max : integer) : list<T>
+    
+operation insert(parameter _list : list<T>, parameter elem : T, parameter pos : integer) : list<T>
+	
+operation removeElement(parameter _list : list<T>, parameter elem : T) : list<T>
+	
+operation removePosition(parameter _list : list<T>, parameter pos : integer) : list<T>
+
+operation forEach(parameter _list : list<T>, parameter op : operation(T))
+
+operation filter(parameter _list : list<T>, parameter op : operation(T) : boolean) : list<T>

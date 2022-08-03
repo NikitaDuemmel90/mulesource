@@ -1,0 +1,45 @@
+library GUIFactoryPanes
+import GUIFactory
+import GUIFactoryBorders
+
+// ------------------------------------------------------------------------------------------------------------
+// OPERATIONS
+// ------------------------------------------------------------------------------------------------------------
+operation createGridPane(parameter columnSpace : integer, parameter rowSpace : integer) : reference<GridPane>
+operation createHorizontalPane(parameter alignment : GUIFactory.Alignment, parameter spacing : integer) : reference<HorizontalPane>
+operation createVerticalPane(parameter alignment : GUIFactory.Alignment, parameter spacing : integer) : reference<VerticalPane>
+operation createBorderPane(parameter hgap : integer, parameter vgap : integer) : reference<BorderPane>
+
+// ------------------------------------------------------------------------------------------------------------
+// TYPES
+// ------------------------------------------------------------------------------------------------------------
+abstract type Pane : composition extends Component
+	operation setBorder(parameter border : reference<GUIFactoryBorders.Border>)
+endtype
+
+abstract type GridPane : composition extends Pane
+	operation setPadding(parameter top : integer, parameter left : integer, parameter bottom : integer, parameter right : integer)
+	operation setSpacing(parameter columnSpace : integer, parameter rowSpace : integer)
+	operation addComponent(parameter component : reference<GUIFactory.Component>, parameter column : integer, parameter row : integer)
+endtype
+
+abstract type BorderPane : composition extends Pane
+	operation setPadding(parameter top : integer, parameter left : integer, parameter bottom : integer, parameter right : integer)
+	operation setTop(parameter component : reference<GUIFactory.Component>)
+	operation setLeft(parameter component : reference<GUIFactory.Component>)
+	operation setCenter(parameter component : reference<GUIFactory.Component>)
+	operation setRight(parameter component : reference<GUIFactory.Component>)
+	operation setBottom(parameter component : reference<GUIFactory.Component>)
+endtype
+
+abstract type VerticalPane : composition extends Pane
+	operation setPadding(parameter top : integer, parameter left : integer, parameter bottom : integer, parameter right : integer)
+	operation setSpacing(parameter spacing : integer)
+	operation addComponent(parameter component : reference<GUIFactory.Component>)
+endtype
+
+abstract type HorizontalPane : composition extends Pane
+	operation setPadding(parameter top : integer, parameter left : integer, parameter bottom : integer, parameter right : integer)
+	operation setSpacing(parameter spacing : integer)
+	operation addComponent(parameter component : reference<GUIFactory.Component>)
+endtype

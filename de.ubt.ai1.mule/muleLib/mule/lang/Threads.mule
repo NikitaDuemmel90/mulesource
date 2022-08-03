@@ -1,0 +1,14 @@
+library Threads
+
+abstract type Thread : composition
+	abstract operation run()
+	
+	operation start() 
+	endoperation
+	
+	operation sleep(parameter time : integer) 
+	endoperation
+	
+	operation waitOnFinish() 
+	endoperation
+endtype

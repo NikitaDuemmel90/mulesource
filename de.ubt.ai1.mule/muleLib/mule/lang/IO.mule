@@ -1,0 +1,40 @@
+library IO
+
+operation writeLine()     
+endoperation
+
+operation writeString(parameter arg : string) 
+endoperation
+
+operation writeInteger(parameter arg : integer) 
+endoperation
+
+operation writeRational(parameter arg : rational) 
+endoperation
+
+operation writeBoolean(parameter arg : boolean) 
+endoperation
+
+operation writeFile(parameter path : string, parameter content : string) : string
+endoperation
+
+operation readString() : string
+endoperation
+
+operation readInteger() : integer
+endoperation
+
+operation readBoolean() : boolean
+endoperation
+
+operation readRational() : rational
+endoperation
+
+operation readFile(parameter path : string) : string
+endoperation
+
+operation readFileLines(parameter path : string) : list<string>
+endoperation
+
+operation fileExists(parameter path : string) : boolean
+endoperation
